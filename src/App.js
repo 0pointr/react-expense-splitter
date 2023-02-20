@@ -1,23 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
+import Table from "./Table.js"
+import Log from './Log';
+import { data } from './data';
+import { useImmer } from 'use-immer';
+
+import { getNameById } from './dataService';
 
 function App() {
+  const [logs, updateLogs] = useImmer([])
+  function handleNewExpenseEvent({lenderId, amount}) {
+    updateLogs((draftLogs) => {
+      draftLogs.push(`${getNameById(data, lenderId)} lent ${amount} dollars to everyone.`)
+    })
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h2>Spend Tracker</h2>
+      <Table onNewExpense={handleNewExpenseEvent}/>
+      <Log logs={logs}/>
     </div>
   );
 }
